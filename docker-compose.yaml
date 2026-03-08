@@ -1,0 +1,17 @@
+version: "3"
+services:
+  mongodb:
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - mongo_insta_data:/data/db
+      - mongo_insta_data_cfg:/data/configdb
+
+volumes:
+  mongo_insta_data:
+  mongo_insta_data_cfg:

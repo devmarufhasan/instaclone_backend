@@ -6,10 +6,10 @@ const PORT = process.env.PORT || 3000;
 
 async function startServer() {
   try {
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
     await connectToDatabase();
+    app.listen(PORT, () => {
+      console.log(`Server is running on port http://localhost:${PORT}`);
+    });
   } catch (error) {
     console.error("Failed to start server");
     console.error(error.message);

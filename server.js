@@ -8,7 +8,7 @@ async function startServer() {
   try {
     await connectToDatabase();
     app.listen(PORT, () => {
-      console.log(`Server is running on port http://localhost:${PORT}`);
+      console.log(`Server is running on http://localhost:${PORT}`);
     });
   } catch (error) {
     console.error("Failed to start server");

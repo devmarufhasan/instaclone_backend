@@ -1,7 +1,6 @@
 const postModel = require("../models/post.model");
 const Imagekit = require("@imagekit/nodejs");
 const { toFile } = require("@imagekit/nodejs");
-const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
 const imagekit = new Imagekit({
@@ -9,13 +8,7 @@ const imagekit = new Imagekit({
 });
 
 async function createPostController(req, res) {
-  const token = req.cookies.token;
-
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const decoded = req.user;
 
   const file = await imagekit.files.upload({
     file: await toFile(req.file.buffer, req.file.originalname),
@@ -36,13 +29,7 @@ async function createPostController(req, res) {
 }
 
 async function getPostController(req, res) {
-  const token = req.cookies.token;
-  let decoded;
-  try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (error) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
+  const decoded = req.user;
 
   const userId = decoded.id;
   const posts = await postModel.find({ userId });
@@ -54,13 +41,7 @@ async function getPostController(req, res) {
 }
 
 async function getPostDetailsController(req, res) {
-  const token = req.cookies.token;
-  let decoded;
-  try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (error) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
+  const decoded = req.user;
 
   const postId = new mongoose.Types.ObjectId(req.params.postid);
   const post = await postModel.findById(postId);

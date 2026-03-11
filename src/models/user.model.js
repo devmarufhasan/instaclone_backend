@@ -23,6 +23,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "https://ik.imagekit.io/pejjepyz8/instaclone/user-default.png",
   },
+  followers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+    },
+  ],
+  following: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+    },
+  ],
 });
 
 const userModel = mongoose.model("users", userSchema);

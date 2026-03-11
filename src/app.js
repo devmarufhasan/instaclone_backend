@@ -5,6 +5,8 @@ const postRouter = require("./routes/post.route");
 const userRouter = require("./routes/user.route");
 const app = express();
 
+app.set("trust proxy", 1);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

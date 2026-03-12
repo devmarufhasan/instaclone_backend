@@ -29,9 +29,9 @@ jobs:
       - name: Deploy on server
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.EC2_HOST}}
-          username: ${{ secrets.EC2_USERNAME}}
-          key: ${{ secrets.EC2_SSH_KEY}}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
             set -e
@@ -39,6 +39,7 @@ jobs:
             git fetch origin
             git checkout main
             git pull --ff-only origin main
+            rm -rf node_modules
             npm ci --omit=dev
             pm2 reload instaclone-backend || pm2 start server.js --name instaclone-backend
             pm2 save

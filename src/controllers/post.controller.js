@@ -1,4 +1,5 @@
 const postModel = require("../models/post.model");
+const likeModel = require("../models/like.modal");
 const Imagekit = require("@imagekit/nodejs");
 const { toFile } = require("@imagekit/nodejs");
 const mongoose = require("mongoose");
@@ -62,8 +63,62 @@ async function getPostDetailsController(req, res) {
   });
 }
 
+async function likePostController(req, res) {
+  const username = req.user.username;
+  const postId = req.params.postid;
+
+  const post = await postModel.findById(postId);
+
+  if (!post) {
+    return res.status(404).json({ message: "Post not found" });
+  }
+
+  try {
+    const likeRecord = await likeModel.create({
+      post: postId,
+      user: username,
+    });
+
+    res.status(201).json({ message: "Post liked successfully", likeRecord });
+  } catch (error) {
+    if (error.code === 11000) {
+      return res
+        .status(400)
+        .json({ message: "You have already liked this post" });
+    }
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+async function unlikePostController(req, res) {
+  const username = req.user.username;
+  const postId = req.params.postid;
+
+  try {
+    const likeRecord = await likeModel.findOne({
+      post: postId,
+      user: username,
+    });
+
+    if (!likeRecord) {
+      return res.status(400).json({ message: "You have not liked this post" });
+    }
+
+    await likeModel.deleteOne({
+      post: postId,
+      user: username,
+    });
+
+    res.status(200).json({ message: "Post unliked successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 module.exports = {
   createPostController,
   getPostController,
   getPostDetailsController,
+  likePostController,
+  unlikePostController,
 };

@@ -38,4 +38,10 @@ postRouter.post(
   postController.unlikePostController,
 );
 
+postRouter.get(
+  "/feed",
+  authMiddleware.identifyUser,
+  postController.getFeedController,
+);
+
 module.exports = postRouter;

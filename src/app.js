@@ -3,7 +3,15 @@ const authRouter = require("./routes/auth.route");
 const cookieParser = require("cookie-parser");
 const postRouter = require("./routes/post.route");
 const userRouter = require("./routes/user.route");
+const cors = require("cors");
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
 app.set("trust proxy", 1);
 
